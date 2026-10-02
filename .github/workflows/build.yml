@@ -31,19 +31,30 @@ jobs:
 
       - name: Install buildozer and cython
         run: |
-          pip install --upgrade pip setuptools wheel
+          pip install "pip==23.3.2" setuptools wheel
           pip install buildozer cython==0.29.36
 
       - name: Verify Python version
         run: |
           python --version
-          which python
+          pip --version
           which buildozer
 
-      - name: Clean previous build artifacts
-        run: |
-          rm -rf .buildozer bin
-          rm -rf ~/.buildozer
+      - name: Cache buildozer global directory
+        uses: actions/cache@v4
+        with:
+          path: ~/.buildozer
+          key: buildozer-global-v3-${{ hashFiles('buildozer.spec') }}
+          restore-keys: |
+            buildozer-global-v3-
+
+      - name: Cache buildozer project directory
+        uses: actions/cache@v4
+        with:
+          path: .buildozer
+          key: buildozer-project-v3-${{ github.sha }}
+          restore-keys: |
+            buildozer-project-v3-
 
       - name: Build with Buildozer
         run: |
