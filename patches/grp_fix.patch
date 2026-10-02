@@ -1,5 +1,0 @@
---- a/Modules/Setup.stdlib.in
-+++ b/Modules/Setup.stdlib.in
-@@ -115,7 +115,7 @@
- @MODULE_GRP_TRUE@grp grpmodule.c
- @MODULE_PWD_TRUE@pwd pwdmodule.c
