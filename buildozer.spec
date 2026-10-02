@@ -21,9 +21,7 @@ android.allow_backup = True
 android.ndk = 25c
 p4a.branch = master
 
-# <<< Важно для Android TV — категория LEANBACK_LAUNCHER
 android.manifest.launcher = True
-android.manifest_extra = <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
 
 [buildozer]
 log_level = 2
