@@ -57,6 +57,8 @@ jobs:
             buildozer-project-v3-
 
       - name: Build with Buildozer
+        env:
+          P4A_DO_NOT_UPDATE_PIP: "1"
         run: |
           yes | buildozer android debug
 
