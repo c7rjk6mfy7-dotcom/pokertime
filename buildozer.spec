@@ -23,3 +23,5 @@ log_level = 2
 warn_on_root = 1
 android.accept_sdk_license = True
 android.entrypoint = org.kivy.android.PythonActivity
+# Отключаем проблемные модули для сборки на Android (они не нужны для Kivy)
+p4a.hostpython3.extra_config_args = --without-grp
