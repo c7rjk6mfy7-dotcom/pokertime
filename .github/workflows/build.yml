@@ -14,7 +14,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -34,21 +34,16 @@ jobs:
           pip install --upgrade pip setuptools wheel
           pip install buildozer cython==0.29.36
 
-      - name: Cache Buildozer global directory
-        uses: actions/cache@v4
-        with:
-          path: ~/.buildozer
-          key: buildozer-global-v2-${{ hashFiles('buildozer.spec') }}
-          restore-keys: |
-            buildozer-global-
+      - name: Verify Python version
+        run: |
+          python --version
+          which python
+          which buildozer
 
-      - name: Cache Buildozer project directory
-        uses: actions/cache@v4
-        with:
-          path: .buildozer
-          key: buildozer-project-v2-${{ github.sha }}
-          restore-keys: |
-            buildozer-project-
+      - name: Clean previous build artifacts
+        run: |
+          rm -rf .buildozer bin
+          rm -rf ~/.buildozer
 
       - name: Build with Buildozer
         run: |
