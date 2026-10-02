@@ -8,7 +8,7 @@ source.include_exts = py,png,jpg,kv,atlas,mp3,ttf
 
 version = 1.0
 
-requirements = python3==3.13.9,hostpython3==3.13.9,kivy==2.3.0
+requirements = python3==3.12.8,hostpython3==3.12.8,kivy==2.3.0
 
 orientation = landscape
 fullscreen = 1
@@ -21,3 +21,5 @@ android.allow_backup = True
 [buildozer]
 log_level = 2
 warn_on_root = 1
+android.accept_sdk_license = True
+android.entrypoint = org.kivy.android.PythonActivity
