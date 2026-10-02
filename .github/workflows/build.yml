@@ -19,6 +19,12 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - name: Install system dependencies
         run: |
           sudo apt-get update
@@ -39,30 +45,32 @@ jobs:
           echo "pip==23.3.2" > $HOME/pip-constraints.txt
           echo "PIP_CONSTRAINT=$HOME/pip-constraints.txt" >> $GITHUB_ENV
 
-      - name: Verify Python version
+      - name: Verify environment
         run: |
           python --version
           pip --version
-          echo "Constraint file: $PIP_CONSTRAINT"
-          cat $PIP_CONSTRAINT
+          java -version
+          echo "JAVA_HOME=$JAVA_HOME"
 
       - name: Cache buildozer global directory
         uses: actions/cache@v4
         with:
           path: ~/.buildozer
-          key: buildozer-global-v4-${{ hashFiles('buildozer.spec') }}
+          key: buildozer-global-v5-${{ hashFiles('buildozer.spec') }}
           restore-keys: |
-            buildozer-global-v4-
+            buildozer-global-v5-
 
       - name: Cache buildozer project directory
         uses: actions/cache@v4
         with:
           path: .buildozer
-          key: buildozer-project-v4-${{ github.sha }}
+          key: buildozer-project-v5-${{ github.sha }}
           restore-keys: |
-            buildozer-project-v4-
+            buildozer-project-v5-
 
       - name: Build with Buildozer
+        env:
+          JAVA_HOME: /usr/lib/jvm/temurin-17-jdk-amd64
         run: |
           yes | buildozer android debug
 
