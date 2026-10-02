@@ -8,7 +8,12 @@ source.include_exts = py,png,jpg,kv,atlas,mp3,ttf
 
 version = 1.0
 
+# Python 3.12.8 — последняя версия, совместимая с Kivy 2.3.0
+# hostpython3 — той же версии, обязательно
 requirements = python3==3.12.8,hostpython3==3.12.8,kivy==2.3.0
+
+# Отключаем проблемный модуль grp для Android
+android.extra_patches = patches/grp_fix.patch
 
 orientation = landscape
 fullscreen = 1
@@ -21,7 +26,3 @@ android.allow_backup = True
 [buildozer]
 log_level = 2
 warn_on_root = 1
-android.accept_sdk_license = True
-android.entrypoint = org.kivy.android.PythonActivity
-# Отключаем проблемные модули для сборки на Android (они не нужны для Kivy)
-p4a.hostpython3.extra_config_args = --without-grp
