@@ -34,31 +34,35 @@ jobs:
           pip install "pip==23.3.2" setuptools wheel
           pip install buildozer cython==0.29.36
 
+      - name: Create pip constraints
+        run: |
+          echo "pip==23.3.2" > $HOME/pip-constraints.txt
+          echo "PIP_CONSTRAINT=$HOME/pip-constraints.txt" >> $GITHUB_ENV
+
       - name: Verify Python version
         run: |
           python --version
           pip --version
-          which buildozer
+          echo "Constraint file: $PIP_CONSTRAINT"
+          cat $PIP_CONSTRAINT
 
       - name: Cache buildozer global directory
         uses: actions/cache@v4
         with:
           path: ~/.buildozer
-          key: buildozer-global-v3-${{ hashFiles('buildozer.spec') }}
+          key: buildozer-global-v4-${{ hashFiles('buildozer.spec') }}
           restore-keys: |
-            buildozer-global-v3-
+            buildozer-global-v4-
 
       - name: Cache buildozer project directory
         uses: actions/cache@v4
         with:
           path: .buildozer
-          key: buildozer-project-v3-${{ github.sha }}
+          key: buildozer-project-v4-${{ github.sha }}
           restore-keys: |
-            buildozer-project-v3-
+            buildozer-project-v4-
 
       - name: Build with Buildozer
-        env:
-          P4A_DO_NOT_UPDATE_PIP: "1"
         run: |
           yes | buildozer android debug
 
