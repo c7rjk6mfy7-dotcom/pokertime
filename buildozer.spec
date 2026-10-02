@@ -8,7 +8,7 @@ source.include_exts = py,png,jpg,kv,atlas,mp3,ttf
 
 version = 1.0
 
-requirements = python3==3.11.5,hostpython3==3.11.5,kivy==2.3.0
+requirements = python3,hostpython3,kivy==2.3.0
 
 orientation = landscape
 fullscreen = 1
@@ -20,6 +20,10 @@ android.allow_backup = True
 
 android.ndk = 25c
 p4a.branch = master
+
+# <<< Важно для Android TV — категория LEANBACK_LAUNCHER
+android.manifest.launcher = True
+android.manifest_extra = <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
 
 [buildozer]
 log_level = 2
