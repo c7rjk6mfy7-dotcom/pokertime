@@ -1,0 +1,364 @@
+#:import dp kivy.metrics.dp
+#:import sp kivy.metrics.sp
+#:import get_color_from_hex kivy.utils.get_color_from_hex
+
+# ==================== ГЛАВНЫЙ ЭКРАН ====================
+<MainScreen>:
+    FloatLayout:
+        # Фоновая заливка (подстраховка, если back.png нет)
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#005339')
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        # ---- ФОНОВАЯ КАРТИНКА ----
+        Image:
+            source: "back.png"
+            size_hint: (1, 1)
+            pos_hint: {'x': 0, 'y': 0}
+            allow_stretch: True
+            keep_ratio: False
+
+        # ---- ЗАТЕМНЕНИЕ ФОНА ----
+        # Чтобы сделать фон темнее — увеличь последнее число (0.35 → 0.5 → 0.7).
+        # Чтобы светлее — уменьши (0.35 → 0.2 → 0.0).
+        Widget:
+            size_hint: (1, 1)
+            pos_hint: {'x': 0, 'y': 0}
+            canvas:
+                Color:
+                    rgba: 0, 0, 0, 0.35
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+        # ---- Контент по центру ----
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: (1, 1)
+            pos_hint: {'x': 0, 'y': 0}
+            padding: dp(20)
+            spacing: dp(6)
+
+            Widget:
+                size_hint_y: 0.03
+
+            # ---- ЛОГОТИП ----
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: dp(100)
+                spacing: dp(0)
+
+                Widget:
+                    size_hint_x: 0.15
+
+                # POKER: P f2 K E R
+                Label:
+                    text: "P"
+                    font_name: "font.ttf"
+                    color: get_color_from_hex('#610C0C')
+                    font_size: sp(72)
+                    size_hint_x: None
+                    width: dp(55)
+                Image:
+                    source: "f2.png"
+                    size_hint_x: None
+                    width: dp(70)
+                    allow_stretch: True
+                    keep_ratio: True
+                Label:
+                    text: "KER"
+                    font_name: "font.ttf"
+                    color: get_color_from_hex('#610C0C')
+                    font_size: sp(72)
+                    size_hint_x: None
+                    width: dp(160)
+
+                Widget:
+                    size_hint_x: None
+                    width: dp(35)
+
+                # HOUSE: H f1 USE
+                Label:
+                    text: "H"
+                    font_name: "font.ttf"
+                    color: get_color_from_hex('#610C0C')
+                    font_size: sp(72)
+                    size_hint_x: None
+                    width: dp(55)
+                Image:
+                    source: "f1.png"
+                    size_hint_x: None
+                    width: dp(70)
+                    allow_stretch: True
+                    keep_ratio: True
+                Label:
+                    text: "USE"
+                    font_name: "font.ttf"
+                    color: get_color_from_hex('#610C0C')
+                    font_size: sp(72)
+                    size_hint_x: None
+                    width: dp(170)
+
+                Widget:
+                    size_hint_x: 0.15
+
+            Widget:
+                size_hint_y: 0.05
+
+            # ---- time: ----
+            Label:
+                text: "time:"
+                color: 1, 1, 1, 1
+                font_size: sp(34)
+                size_hint_y: None
+                height: dp(46)
+
+            # ---- Таймер ----
+            Label:
+                id: lbl_timer
+                text: root.timer_text
+                color: 1, 1, 1, 1
+                font_size: sp(180)
+                bold: True
+                size_hint_y: None
+                height: dp(210)
+
+            Widget:
+                size_hint_y: 0.04
+
+            # ---- level N ----
+            Label:
+                text: root.level_text
+                color: 0.9, 0.9, 0.9, 1
+                font_size: sp(44)
+                size_hint_y: None
+                height: dp(56)
+
+            # ---- SB/BB: 100/200 ----
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: dp(80)
+                spacing: dp(10)
+
+                Widget:
+                    size_hint_x: 0.18
+
+                Label:
+                    text: "SB/BB:"
+                    color: 1, 1, 1, 1
+                    font_size: sp(44)
+                    size_hint_x: None
+                    width: dp(180)
+
+                Label:
+                    text: root.blinds_text
+                    color: 1, 1, 1, 1
+                    font_size: sp(72)
+                    bold: True
+                    size_hint_x: None
+                    width: dp(360)
+
+                Widget:
+                    size_hint_x: 0.18
+
+            Widget:
+                size_hint_y: 0.05
+
+            # ---- next: 200/400 ----
+            Label:
+                text: root.next_text
+                color: 0.85, 0.85, 0.85, 1
+                font_size: sp(38)
+                size_hint_y: None
+                height: dp(50)
+
+            Widget:
+                size_hint_y: 0.05
+
+        # ---- Слой с падающими картами ----
+        CardsLayer:
+            id: cards_layer
+            size_hint: (1, 1)
+            pos_hint: {'x': 0, 'y': 0}
+
+               # ---- Кнопка настроек в правом нижнем углу ----
+        Button:
+            size_hint: (None, None)
+            size: dp(40), dp(40)
+            pos_hint: {'right': 0.98, 'y': 0.03}
+            background_normal: 'gear.png'
+            background_down: 'gear.png'
+            background_color: 1, 1, 1, 0.85
+            border: (0, 0, 0, 0)
+            on_release: app.sm.current = 'settings'
+
+
+# ==================== ЭКРАН НАСТРОЕК ====================
+<SettingsScreen>:
+    canvas.before:
+        Color:
+            rgba: get_color_from_hex('#005339')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(40)
+        spacing: dp(16)
+
+        Label:
+            text: "НАСТРОЙКИ СТРУКТУРЫ"
+            color: 1, 1, 1, 1
+            font_size: sp(36)
+            bold: True
+            size_hint_y: None
+            height: dp(60)
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: dp(12)
+            size_hint_y: 0.75
+
+            BoxLayout:
+                orientation: 'horizontal'
+                spacing: dp(16)
+                size_hint_y: None
+                height: dp(60)
+                Label:
+                    text: "Стартовый SB:"
+                    color: 1, 1, 1, 1
+                    font_size: sp(22)
+                    size_hint_x: 0.5
+                TextInput:
+                    id: inp_sb
+                    text: "100"
+                    input_filter: 'int'
+                    multiline: False
+                    font_size: sp(22)
+                    size_hint_x: 0.5
+
+            BoxLayout:
+                orientation: 'horizontal'
+                spacing: dp(16)
+                size_hint_y: None
+                height: dp(60)
+                Label:
+                    text: "Стартовый BB:"
+                    color: 1, 1, 1, 1
+                    font_size: sp(22)
+                    size_hint_x: 0.5
+                TextInput:
+                    id: inp_bb
+                    text: "200"
+                    input_filter: 'int'
+                    multiline: False
+                    font_size: sp(22)
+                    size_hint_x: 0.5
+
+            BoxLayout:
+                orientation: 'horizontal'
+                spacing: dp(16)
+                size_hint_y: None
+                height: dp(60)
+                Label:
+                    text: "Длительность уровня (мин):"
+                    color: 1, 1, 1, 1
+                    font_size: sp(22)
+                    size_hint_x: 0.5
+                TextInput:
+                    id: inp_level_min
+                    text: "15"
+                    input_filter: 'int'
+                    multiline: False
+                    font_size: sp(22)
+                    size_hint_x: 0.5
+
+            BoxLayout:
+                orientation: 'horizontal'
+                spacing: dp(16)
+                size_hint_y: None
+                height: dp(60)
+                Label:
+                    text: "Длительность перерыва (мин):"
+                    color: 1, 1, 1, 1
+                    font_size: sp(22)
+                    size_hint_x: 0.5
+                TextInput:
+                    id: inp_break_min
+                    text: "10"
+                    input_filter: 'int'
+                    multiline: False
+                    font_size: sp(22)
+                    size_hint_x: 0.5
+
+            BoxLayout:
+                orientation: 'horizontal'
+                spacing: dp(16)
+                size_hint_y: None
+                height: dp(60)
+                Label:
+                    text: "Уровней до перерыва:"
+                    color: 1, 1, 1, 1
+                    font_size: sp(22)
+                    size_hint_x: 0.5
+                TextInput:
+                    id: inp_per_break
+                    text: "5"
+                    input_filter: 'int'
+                    multiline: False
+                    font_size: sp(22)
+                    size_hint_x: 0.5
+
+            BoxLayout:
+                orientation: 'horizontal'
+                spacing: dp(16)
+                size_hint_y: None
+                height: dp(60)
+                Label:
+                    text: "Всего уровней:"
+                    color: 1, 1, 1, 1
+                    font_size: sp(22)
+                    size_hint_x: 0.5
+                TextInput:
+                    id: inp_max_levels
+                    text: "30"
+                    input_filter: 'int'
+                    multiline: False
+                    font_size: sp(22)
+                    size_hint_x: 0.5
+
+        Label:
+            id: lbl_status
+            text: ""
+            color: get_color_from_hex('#00d9a3')
+            font_size: sp(20)
+            size_hint_y: None
+            height: dp(30)
+
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: dp(12)
+            size_hint_y: None
+            height: dp(80)
+
+            Button:
+                text: "ПО УМОЛЧАНИЮ"
+                font_size: sp(18)
+                on_release: root.reset_defaults()
+
+            Button:
+                text: "ОТМЕНА"
+                font_size: sp(20)
+                on_release: root.back_to_main()
+
+            Button:
+                text: "СОХРАНИТЬ И ВЫЙТИ"
+                font_size: sp(20)
+                background_color: 0, 0.85, 0.64, 1
+                on_release: root.apply_and_back()
