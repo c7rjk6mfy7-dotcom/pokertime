@@ -12,7 +12,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
 from kivy.properties import NumericProperty, BooleanProperty, StringProperty
 from kivy.core.window import Window
 from kivy.core.audio import SoundLoader
-from kivy.utils import get_color_from_hex
+from kivy.utils import get_color_from_hex, platform
 from kivy.lang import Builder
 from kivy.animation import Animation
 from kivy.metrics import dp
@@ -186,7 +186,7 @@ class MainScreen(Screen):
     level_text    = StringProperty("level 1")
     blinds_text   = StringProperty("100/200")
     next_text     = StringProperty("next: 200/400")
-    play_icon     = StringProperty("▶")
+    play_icon     = StringProperty(">")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -278,14 +278,14 @@ class MainScreen(Screen):
         if self.time_left <= 0:
             self.time_left = self.structure[self.current_index]['duration']
         self.running = True
-        self.play_icon = "⏸"
+        self.play_icon = "||"
         if self._clock_event:
             self._clock_event.cancel()
         self._clock_event = Clock.schedule_interval(self._tick, 1.0)
 
     def _pause(self):
         self.running = False
-        self.play_icon = "▶"
+        self.play_icon = ">"
         if self._clock_event:
             self._clock_event.cancel()
             self._clock_event = None
@@ -384,8 +384,7 @@ class PokerTimerApp(App):
         self.title = "Poker House Timer"
         Window.clearcolor = BG_GREEN
 
-        # Fullscreen — только для десктопа, на Android мешает
-        from kivy.utils import platform
+        # Fullscreen — только для десктопа
         if platform in ('win', 'linux', 'macosx'):
             Window.fullscreen = 'auto'
             Window.borderless = True
@@ -401,20 +400,19 @@ class PokerTimerApp(App):
 
     def _on_key_down(self, window, key, scancode=None, codepoint=None,
                      modifier=None, **kwargs):
-        """Клавиатура/пульт на десктопе и частично на Android."""
         current = self.sm.current
         if current == 'main':
             main = self.sm.get_screen('main')
-            if key in (13, 32):     # Enter / Пробел
+            if key in (13, 32):
                 main.toggle_timer()
                 return True
-            if key == 275:          # →
+            if key == 275:
                 main.next_level()
                 return True
-            if key == 276:          # ←
+            if key == 276:
                 main.prev_level()
                 return True
-            if key == 27:           # ESC — выход
+            if key == 27:
                 App.get_running_app().stop()
                 return True
         elif current == 'settings':
