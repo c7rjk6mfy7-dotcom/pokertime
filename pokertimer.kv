@@ -3,29 +3,16 @@
 #:import get_color_from_hex kivy.utils.get_color_from_hex
 
 
-# ---- Стиль кнопок управления ----
+# ---- Стиль кнопок управления (упрощённый, без Unicode) ----
 <CtrlBtn@Button>:
     size_hint: (None, None)
-    size: dp(96), dp(72)
+    size: dp(110), dp(70)
     background_normal: ''
     background_down: ''
-    background_color: 0, 0, 0, 0
-    color: 0.85, 0.85, 0.85, 0.75
-    font_size: sp(38)
+    background_color: 0, 0, 0, 0.45
+    color: 1, 1, 1, 0.95
+    font_size: sp(26)
     bold: True
-    canvas.before:
-        Color:
-            rgba: (0, 0, 0, 0.35) if self.state == 'normal' else (0, 0.85, 0.64, 0.55)
-        RoundedRectangle:
-            pos: self.pos
-            size: self.size
-            radius: [dp(10)]
-    canvas.after:
-        Color:
-            rgba: (0, 0.85, 0.64, 0.9) if self.focus else (0, 0, 0, 0)
-        Line:
-            rounded_rectangle: (self.x, self.y, self.width, self.height, dp(10))
-            width: dp(3)
 
 
 # ==================== ГЛАВНЫЙ ЭКРАН ====================
@@ -62,15 +49,14 @@
             orientation: 'vertical'
             size_hint: (1, 1)
             pos_hint: {'x': 0, 'y': 0}
-            padding: dp(20), dp(10), dp(20), dp(120)   # низ — чтобы кнопки не закрывали контент
+            padding: dp(20), dp(20), dp(20), dp(110)
             spacing: dp(4)
 
-            # Небольшой отступ сверху
             Widget:
                 size_hint_y: None
-                height: dp(20)
+                height: dp(15)
 
-            # ---- ЛОГОТИП (POKER HOUSE) ----
+            # ---- ЛОГОТИП ----
             BoxLayout:
                 orientation: 'horizontal'
                 size_hint_y: None
@@ -217,12 +203,12 @@
         BoxLayout:
             orientation: 'horizontal'
             size_hint: (None, None)
-            size: dp(480), dp(80)
+            size: dp(560), dp(80)
             pos_hint: {'center_x': 0.5, 'y': 0.03}
-            spacing: dp(20)
+            spacing: dp(16)
 
             CtrlBtn:
-                text: "⏮"
+                text: "<<"
                 on_release: root.prev_level()
 
             CtrlBtn:
@@ -232,11 +218,12 @@
                 on_release: root.toggle_timer()
 
             CtrlBtn:
-                text: "⏭"
+                text: ">>"
                 on_release: root.next_level()
 
             CtrlBtn:
-                text: "⚙"
+                text: "MENU"
+                font_size: sp(18)
                 on_release: root.open_settings()
 
 
